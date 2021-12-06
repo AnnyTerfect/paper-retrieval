@@ -97,88 +97,90 @@
         ref="dataIterator"
       >
         <template v-slot:default="props">
-          <v-card
-            v-for="(paper, index) in props.items"
-            :key="index"
-            class="mb-1"
-            flat
-          >
-            <v-divider
-              v-if="index == 0"
+          <transition-group name="fade">
+            <v-card
+              v-for="(paper, index) in props.items"
+              :key="paper.titleBase64"
               class="mb-1"
-            ></v-divider>
-            <v-card-title
-              class="text-subtitle-1 font-weight-bold pt-2 pb-0"
-              style="line-height: 1.3em"
+              flat
             >
-              {{ paper.title }}
-            </v-card-title>
+              <v-divider
+                v-if="index == 0"
+                class="mb-1"
+              ></v-divider>
+              <v-card-title
+                class="text-subtitle-1 font-weight-bold pt-2 pb-0"
+                style="line-height: 1.3em"
+              >
+                {{ paper.title }}
+              </v-card-title>
 
-            <v-card-subtitle
-              class="text-subtitle-2 pt-4 pb-0 d-lg-none"
-            >
-              {{ paper.authors }}
-            </v-card-subtitle>
-
-            <v-card-actions
-              class="pt-0 px-4"
-            >
-              <span class="text-body-2 d-none d-lg-inline">
+              <v-card-subtitle
+                class="text-subtitle-2 pt-4 pb-0 d-lg-none"
+              >
                 {{ paper.authors }}
-              </span>
+              </v-card-subtitle>
 
-              <v-spacer></v-spacer>
-
-              <v-btn
-                text
-                x-small
-                plain
-                @click="downloadAll(paper.titleBase64)"
-                class="text-overline black--text"
+              <v-card-actions
+                class="pt-0 px-4"
               >
-                ALL
-              </v-btn>
+                <span class="text-body-2 d-none d-lg-inline">
+                  {{ paper.authors }}
+                </span>
 
-              <!--<v-btn
-                text
-                @click="download(paper.titleBase64)"
-              >
-                DOWNLOAD PDF
-              </v-btn>-->
+                <v-spacer></v-spacer>
 
-              <v-btn
-                text
-                x-small
-                plain
-                @click="view(paper.titleBase64)"
-                class="text-overline black--text"
-              >
-                PDF
-              </v-btn>
+                <v-btn
+                  text
+                  x-small
+                  plain
+                  @click="downloadAll(paper.titleBase64)"
+                  class="text-overline black--text"
+                >
+                  ALL
+                </v-btn>
 
-              <v-btn
-                text
-                x-small
-                plain
-                @click="paper.expanded = !paper.expanded"
-                class="text-overline black--text"
-              >
-                ABSTRACT<v-icon>{{ paper.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-              </v-btn>
-            </v-card-actions>
+                <!--<v-btn
+                  text
+                  @click="download(paper.titleBase64)"
+                >
+                  DOWNLOAD PDF
+                </v-btn>-->
 
-            <v-expand-transition>
-              <div v-show="paper.expanded">
-                <v-divider></v-divider>
+                <v-btn
+                  text
+                  x-small
+                  plain
+                  @click="view(paper.titleBase64)"
+                  class="text-overline black--text"
+                >
+                  PDF
+                </v-btn>
 
-                <v-card-text class="text-body-2">
-                  {{ paper.abstract }}
-                </v-card-text>
-              </div>
-            </v-expand-transition>
-            
-            <v-divider class="my-1"></v-divider>
-          </v-card>
+                <v-btn
+                  text
+                  x-small
+                  plain
+                  @click="paper.expanded = !paper.expanded"
+                  class="text-overline black--text"
+                >
+                  ABSTRACT<v-icon>{{ paper.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                </v-btn>
+              </v-card-actions>
+
+              <v-expand-transition>
+                <div v-show="paper.expanded">
+                  <v-divider></v-divider>
+
+                  <v-card-text class="text-body-2">
+                    {{ paper.abstract }}
+                  </v-card-text>
+                </div>
+              </v-expand-transition>
+              
+              <v-divider class="my-1"></v-divider>
+            </v-card>
+          </transition-group>
         </template>
 
         <template v-slot:footer>
@@ -347,14 +349,20 @@
       },
       nextPage () {
         if (this.page + 1 <= this.numberOfPages) {
-          this.page += 1
-          this.$vuetify.goTo(this.$refs.dataIterator)
+          this.$vuetify.goTo(this.$refs.dataIterator, { duration: 300 })
+
+          setTimeout(() => {
+            this.page += 1
+          }, 300)
         }
       },
       formerPage () {
         if (this.page - 1 >= 1) {
-          this.page -= 1
-          this.$vuetify.goTo(this.$refs.dataIterator)
+          this.$vuetify.goTo(this.$refs.dataIterator, {duration: 300})
+
+          setTimeout(() => {
+            this.page -= 1
+          }, 300)
         }
       },
       updateItemsPerPage (number) {
@@ -372,3 +380,14 @@
     }
   }
 </script>
+
+<style>
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all .5s;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+</style>
