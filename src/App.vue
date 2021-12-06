@@ -1,28 +1,55 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-navigation-drawer
+      app
+      clipped
+      width="350"
+      max-width="100%"
+      v-model="$store.state.showNav"
+    >
+      <paper-filter
+      ></paper-filter>
+    </v-navigation-drawer>
+
+    <v-app-bar
+      app
+      color="primary"
+      dark
+      clipped-left
+    >
+      <div class="d-flex align-center">
+        <span class="text-h6 font-weight-regular">
+          <v-icon class="mr-1">mdi-archive-search</v-icon>
+          Paper Retrieval
+        </span>
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        icon
+      >
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import Filter from './components/Filter.vue'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+  data: () => ({
+  }),
+  components: {
+    'paper-filter': Filter
+  }
+};
+</script>
