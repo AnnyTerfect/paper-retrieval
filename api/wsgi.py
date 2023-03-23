@@ -4,7 +4,7 @@ import re
 import base64
 import zipfile
 from flask import Flask
-from flask import Response, request
+from flask import Response
 
 app = Flask(__name__)
 app.run()
@@ -84,6 +84,7 @@ def get_papers():
         titles = os.listdir(folders_path)
 
         for title in titles:
+            title = title.replace('\\slash', '/')
             title_base64 = base64.encodebytes(title.encode()).decode().strip()
             paper = {'title': title, 'titleBase64': title_base64, 'authors': '', 'abstract': '', 'conf': conf}
 
@@ -93,7 +94,9 @@ def get_papers():
 
                     authors = re.findall('(?<=author" content=").*?(?=")', content)
                     authors = ', '.join([' '.join(author.split(', ')[: : -1]) for author in authors])
-                    abstract = re.search('(?<=Abstract)[\s\S]*?(?=\<\/p\>)', content).group()
+                    abstract = re.search('(?<=Abstract)[\s\S]*?(?=\<\/p\>)', content)
+                    abstract = abstract.group() if abstract else '' 
+                    abstract = re.sub('Cite this Paper[\s\S]*', '', abstract)
                     abstract = re.sub('\<.*?\>', '', abstract).strip()
 
                     paper['authors'] = authors
