@@ -56,7 +56,7 @@
           <transition-group name="fade">
             <v-card v-for="(paper, index) in props.items" :key="paper.titleBase64" class="mb-1" flat>
               <v-divider v-if="index == 0" class="mb-1"></v-divider>
-              <v-card-title class="text-subtitle-1 font-weight-bold pt-2 pb-0" style="line-height: 1.3em">
+              <v-card-title class="text-subtitle-1 font-weight-bold pt-2 pb-0" style="line-height: 1.3em; display: block">
                 {{ paper.title }}
                 <span
                   v-if="$store.state.selectedConference.length > 1"
