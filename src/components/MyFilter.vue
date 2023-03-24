@@ -14,26 +14,14 @@
 
 		<v-card-text>
 			<div class="d-flex flex-wrap">
-				<v-checkbox
-					class="mt-0 mx-2"
-					v-for="conference in $store.state.conferenceList"
-					v-model="selectedConference"
-					:label="conference"
-					:value="conference"
-					:key="conference"
-					@change="updateSelectedConference"
-				></v-checkbox>
+				<v-checkbox class="mt-0 mx-2" v-for="conference in $store.state.conferenceList" v-model="selectedConference"
+					:label="conference" :value="conference" :key="conference"
+					@change="updateSelectedConference"></v-checkbox>
 			</div>
-			<v-btn
-				class="mt-2 mx-2"
-				@click="selectAllConference"
-			>
+			<v-btn class="mt-2 mx-2" @click="selectAllConference">
 				Select all
 			</v-btn>
-			<v-btn
-				class="mt-2 mx-2"
-				@click="unSelectAllConference"
-			>
+			<v-btn class="mt-2 mx-2" @click="unSelectAllConference">
 				Unselect all
 			</v-btn>
 		</v-card-text>
@@ -112,6 +100,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
 	name: 'MyFilter',
 
@@ -135,6 +125,7 @@ export default {
 	}),
 
 	mounted: function () {
+		this.getConfList()
 		this.$store.commit('receiveTitleExclude', {
 			titleExclude: this.titleExclude
 		})
@@ -157,6 +148,19 @@ export default {
 			this.$store.commit('receiveUpdateShowNav', {
 				showNav: !this.$store.state.showNav
 			})
+		},
+		getConfList() {
+			axios.get('/api/getConfList')
+				.then((res) => {
+					let conferenceList = res.data.sort()
+					this.$store.commit('receiveConferenceList', {
+						conferenceList
+					})
+					this.selectAllConference()
+				})
+				.catch((err) => {
+					console.log(err)
+				})
 		},
 		updateSelectedConference() {
 			this.$store.commit('receiveSelectedConference', {

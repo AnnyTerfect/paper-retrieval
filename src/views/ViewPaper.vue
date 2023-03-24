@@ -137,10 +137,10 @@
                     grey--text">
                 Page {{ page }} of {{ numberOfPages }}
               </span>
-              <v-btn fab small dark color="blue darken-3" class="mr-1" @click="formerPage">
-                <v-icon>mdi-chevron-left</v-icon>
+              <v-btn fab small dark color="blue darken-3" class="mr-1" @click="formerPage" :disabled="page === 1">
+                <v-icon color="primary">mdi-chevron-left</v-icon>
               </v-btn>
-              <v-btn fab small dark color="blue darken-3" class="ml-1" @click="nextPage">
+              <v-btn fab small dark color="blue darken-3" class="ml-1" @click="nextPage" :disabled="page === numberOfPages">
                 <v-icon>mdi-chevron-right</v-icon>
               </v-btn>
             </v-card-text>
@@ -229,8 +229,7 @@ export default {
     },
   },
 
-  mounted: function () {
-    this.getConfList()
+  mounted: function () {    
     this.getPapers()
   },
 
@@ -239,18 +238,6 @@ export default {
       this.$store.commit('receiveUpdateShowNav', {
         showNav: !this.$store.state.showNav
       })
-    },
-    getConfList() {
-      axios.get('/api/getConfList')
-        .then((res) => {
-          let conferenceList = res.data
-          this.$store.commit('receiveConferenceList', {
-            conferenceList
-          })
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     },
     getPapers() {
       let _this = this
