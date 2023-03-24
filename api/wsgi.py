@@ -84,9 +84,8 @@ def get_papers():
         titles = os.listdir(folders_path)
 
         for title in titles:
-            title = title.replace('\\slash', '/')
             title_base64 = base64.encodebytes(title.encode()).decode().strip()
-            paper = {'title': title, 'titleBase64': title_base64, 'authors': '', 'abstract': '', 'conf': conf}
+            paper = {'title': title.replace('\\slash', '/'), 'titleBase64': title_base64, 'authors': '', 'abstract': '', 'conf': conf}
 
             if os.path.exists(os.path.join(folders_path, title, 'abstract.html')):
                 with open(os.path.join(folders_path, title, 'abstract.html')) as rf:
